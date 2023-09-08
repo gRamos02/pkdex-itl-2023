@@ -29,6 +29,7 @@ jobs:
           with:
             name: flake8-coverage-report
             path: reports/flake8/
+
     dockerhub:
         name: Build & Push Image
         runs-on: ubuntu-latest
@@ -50,4 +51,4 @@ jobs:
               uses: docker/build-push-action@v4
               with:
                 push: true
-                tags: gRamos02/pokedex_itl_2023:latest
+                tags: gramos02/pkdex-itl-2023:latest
