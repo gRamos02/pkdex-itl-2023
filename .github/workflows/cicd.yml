@@ -3,7 +3,7 @@ name: FastAPI CI/CD
 on: 
   push:
     branches:
-      - main 
+      - main
 
 jobs:
 
@@ -30,8 +30,33 @@ jobs:
             name: flake8-coverage-report
             path: reports/flake8/
 
+    pytest:
+        name: Unit Testing
+        needs: flake8
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: Set up Python 3.11
+          uses: actions/setup-python@v4
+          with:
+            python-version: 3.11
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+        - name: Test with pytest
+          run: |
+            pip install pytest pytest-cov pytest-html pytest-sugar pytest-json-report
+            py.test -v --cov --html=reports/pytest/report.html
+        - name: Archive pytest coverage results
+          uses: actions/upload-artifact@v3
+          with:
+            name: pytest-coverage-report
+            path: reports/pytest/
+
     dockerhub:
         name: Build & Push Image
+        needs: pytest
         runs-on: ubuntu-latest
         steps:
             -
